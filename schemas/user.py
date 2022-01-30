@@ -1,8 +1,12 @@
+from typing import Optional
+
 from pydantic import BaseModel
 
 
 class User(BaseModel):
-    user_id: int
-    user_name: str
-    email_address: str
-    nickname: str
+    id: int
+    name: str
+    password: str
+    email: str
+    nick_name: Optional[str]
+    image_url: Optional[str]
