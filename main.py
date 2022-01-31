@@ -1,14 +1,12 @@
 import sqlalchemy
+import uvicorn
 from fastapi import FastAPI, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from fastapi_login import LoginManager
 from fastapi_login.exceptions import InvalidCredentialsException
 from config import engine
-from config.models import user
-from routes import user_routes, item_routes
-from routes.home import home_routes
-
+from config import user
 app = FastAPI()
 
 SECRET = 'your-secret-key'
@@ -17,6 +15,7 @@ manager = LoginManager(SECRET, token_url='/auth/token')
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+from routes import user_routes, item_routes,home_routes
 app.include_router(user_routes)
 app.include_router(item_routes)
 app.include_router(home_routes)
@@ -49,3 +48,7 @@ def login(data: OAuth2PasswordRequestForm = Depends()):
         data=dict(sub=email)
     )
     return {'access_token': access_token, 'token_type': 'bearer'}
+
+
+if __name__=="__main__":
+    uvicorn.run("main:app",host="127.0.0.1",port="8000")
