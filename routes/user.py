@@ -25,8 +25,10 @@ def add_user(u: User):
         results = connection.execute(query).fetchall()
     return results[-1]
 
+
 @user_routes.delete("/user/{id}")
-def delete_user(id, user=Depends(manager)):
+def delete_user(id, current_user=Depends(manager)):
+    print("current User = " ,current_user)
     with engine.connect() as connection:
         query = sqlalchemy.delete(user).where(user.c.id == id)
         connection.execute(query)
