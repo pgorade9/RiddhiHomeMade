@@ -1,2 +1,1 @@
-from config.db import engine
-from config.models import user, item
+from config.db import Base, engine
