@@ -1,45 +1,53 @@
-from fastapi import APIRouter, Depends
-from passlib.context import CryptContext
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from sqlalchemy.orm import Session
 
-from config import engine, user
-from main import manager
-from schemas import User
-import sqlalchemy
+import schemas
+from config import engine, Base
+from config.db import SessionLocal
+from utils.user import crud
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 user_routes = APIRouter()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
+
+
+# Dependency
+def get_db():
+    print("SessionLocal : ",SessionLocal)
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+@user_routes.post('/token')
+async def token(form_data: OAuth2PasswordRequestForm = Depends()):
+    return {'access_token': form_data.username + 'token'}
+
+
+@user_routes.get("/user/{user_id}")
+def get_user(user_id: int, db: Session = Depends(get_db)) -> schemas.User:
+    return crud.get_user_by_id(user_id=user_id,db=db)
 
 @user_routes.get("/user")
-def get_user():
-    with engine.connect() as connection:
-        query = sqlalchemy.select(user)
-        results = connection.execute(query).fetchall()
-    return results
-
-
-def get_password_hashed(password):
-    return pwd_context.hash(password)
+def get_users(db: Session = Depends(get_db)):
+    return crud.get_all_users(db=db)
 
 
 @user_routes.post("/user")
-def add_user(u: User):
-    with engine.connect() as connection:
-        query = sqlalchemy.insert(user).values(
-            (u.id, u.name, get_password_hashed(u.password), u.email, u.nick_name, u.image_url))
-        connection.execute(query)
-        query = sqlalchemy.select(user)
-        results = connection.execute(query).fetchall()
-    return results[-1]
+def add_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    db_user = crud.get_user_by_email(db, email=user.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    return crud.create_user(db=db, user=user)
 
 
-@user_routes.delete("/user/{id}")
-def delete_user(id, current_user=Depends(manager)):
-    print("current User = ", current_user)
-    with engine.connect() as connection:
-        query = sqlalchemy.delete(user).where(user.c.id == id)
-        connection.execute(query)
-
-        query = sqlalchemy.select(user)
-        results = connection.execute(query).fetchall()
-    return results
+@user_routes.delete("/user/{user_id}")
+def delete_user(user_id: int, db: Session = Depends(get_db),token:str=Depends(oauth2_scheme)):
+    db_user = crud.get_user_by_id(db=db, user_id=user_id)
+    if not db_user:
+        raise HTTPException(status_code=400, detail="User Not Found for the given User Id")
+    return crud.delete_user(db=db, user_id=user_id)

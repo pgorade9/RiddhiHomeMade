@@ -3,16 +3,18 @@ from typing import Optional
 from pydantic import BaseModel
 
 
-class User(BaseModel):
+# Note the implementation of SOLID principles (Interface seggregation)
+class UserBase(BaseModel):
     id: int
     name: str
-    password: str
     email: str
-    nick_name: Optional[str]
     image_url: Optional[str]
 
 
-class CurrentUser(BaseModel):
-    username: str
-    email: Optional[str] = None
-    # disabled: Optional[bool] = None
+class UserCreate(UserBase):
+    password: str
+
+
+class User(UserBase):
+    class Config:
+        orm_mode = True
