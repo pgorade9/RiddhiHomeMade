@@ -9,3 +9,4 @@ class Item(BaseModel):
     price: float
     stock: int
     image_url: Optional[str]
+    description:Optional[str]

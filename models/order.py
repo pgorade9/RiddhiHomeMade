@@ -1,12 +1,18 @@
-from sqlalchemy import Table, Column, Integer, String, ForeignKey, Float
-from sqlalchemy.orm import relationships
-from config.db import meta
+from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy.orm import relationship
 
-user = Table('order', meta,
-             Column('id', Integer, primary_key=True, autoincrement=True),
-             Column('user', Integer, ForeignKey('user.id'),nullable=False),
-             Column('quantity',Integer, nullable=False),
-             Column('price',Float,nullable=False),
-             Column('total',Float,nullable=False),
-             Column('invoice_id',Integer,ForeignKey('invoice.id'))
-             )
+from config.db import Base
+
+
+class Order(Base):
+    __tablename__ = "orders"
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    item_id = Column(Integer, ForeignKey("items.id"), nullable=False, index=True)
+    item_name = Column(String,index=True)
+    item_price = Column(Float,index=True)
+    quantity = Column(Integer, nullable=False, index=True)
+    total = Column(Float)
+    user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
+    status = Column(String, index=True, nullable=False)
+    user = relationship("User", backref="orders")
+    item = relationship("Item", backref="orders")
