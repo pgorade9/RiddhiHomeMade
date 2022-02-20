@@ -2,9 +2,10 @@ from pydantic import BaseModel
 
 
 class Order(BaseModel):
-    name: str
-    user: str
+    id: int
+    item_id: int
+    item_name: str
     quantity: int
-    price: float
+    item_price: float
     total: float
-    invoice_id = int
+    user_id = int
