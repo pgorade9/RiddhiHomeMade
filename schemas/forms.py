@@ -1,8 +1,11 @@
 import sqlalchemy
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
 from wtforms import Form, StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, ValidationError, Length, EqualTo
+
 # from config import engine, user
+import models
 
 
 class LoginForm(Form):
@@ -19,9 +22,7 @@ class RegistrationForm(Form):
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
 
-    # def validate_email(self, email):
-    #     with engine.connect() as connection:
-    #         query = sqlalchemy.delete(user).where(user.c.email == email)
-    #         result = connection.execute(query).first()
-    #         if result:
-    #             raise ValidationError("That email is already taken. Please take a different one")
+    def validate_email(self, db: Session, email):
+        result = db.query(models.User).filter(models.User.email == email).first()
+        if result:
+            raise ValidationError("That email is already taken. Please take a different one")

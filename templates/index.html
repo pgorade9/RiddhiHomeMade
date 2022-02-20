@@ -9,16 +9,21 @@
 {% block body %}
         
         <main role="main"  class="container">
+            {% for message in messages %}
+            <div class="alert alert-success" role="alert">
+                {{message}}
+            </div>
+            {% endfor %}
         <div class="row">
-        
+
         {% for product in products %}
         <form method="POST" action="/orders/{{product.id}}">
         <div class="col-md-4">
-            <table class='table' >
             <input type="hidden" name="{{product.id}}">
-            <tr id= 'mymenu'><td >{{product.name}}</td><td>{{product.price}}</td></tr>
-            <tr id= 'mymenu'><td colspan="2"><img width=180px height=120px src="{{ url_for('static',path = 'product_images/'+ product.image_url) }}"/></td></tr>
-            <tr><td><input type="number" name="quantity" min=1 max=10 value=1></td><td><input type="submit" value="Add to Cart" class="btn btn-primary"></td></tr>
+            <table class='table' >
+                <tr class = 'mymenu'><td >{{product.name}}</td><td>{{product.price}}</td></tr>
+                <tr class = 'mymenu'><td colspan="2"><img width=180px height=120px src="{{ url_for('static',path = 'product_images/'+ product.image_url) }}"/></td></tr>
+                <tr><td><input type="number" name="quantity" min=1 max={{product.stock}} value=1></td><td><input type="submit" value="Add to Cart" class="btn btn-primary"></td></tr>
             </table>
         </div>
         </form>
