@@ -17,7 +17,7 @@ class CRUD:
             return {"User not recognized. Please register"}
         elif not hashing.verify_password(password, db_user.hashed_password):
             return {"Invalid Username or Password"}
-        return jwt.encode({"sub": email}, settings.SECRET, settings.ALGORITHM)
+        return jwt.encode({"sub": email}, settings.SECRET_KEY, settings.ALGORITHM)
 
     def get_current_user(self, token: str, db: Session):
         credentials_exception = HTTPException(
@@ -28,7 +28,7 @@ class CRUD:
         print("i am at get_current_user")
         try:
             token = token.split(None, 1)[1]
-            data = jwt.decode(token, settings.SECRET, settings.ALGORITHM)
+            data = jwt.decode(token, settings.SECRET_KEY, settings.ALGORITHM)
             email = data.get("sub")
         except JWTError:
             raise credentials_exception

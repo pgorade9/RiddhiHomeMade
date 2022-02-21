@@ -21,7 +21,7 @@ def get_db():
 
 
 @user_routes.post('/token')
-async def token(form_data: OAuth2PasswordRequestForm = Depends()):
+def token(form_data: OAuth2PasswordRequestForm = Depends()):
     return {'access_token': form_data.username + 'token'}
 
 
