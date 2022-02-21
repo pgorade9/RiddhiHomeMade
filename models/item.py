@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Column, Integer, String, ForeignKey, Float
 from sqlalchemy.orm import relationship
 
-from config.db import Base
+from config import Base
 
 
 class Item(Base):
@@ -15,3 +15,6 @@ class Item(Base):
     description = Column(String)
     # owner_id = Column(Integer, ForeignKey("users.id"))
     # owner = relationship("User", backref="items")
+
+    def __repr__(self):
+        return f"<Item(name={self.name},description={self.description})>"

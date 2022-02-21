@@ -1,13 +1,11 @@
-from sqlalchemy import Table, Column, Integer, String, ForeignKey, Float, DateTime
+from sqlalchemy import Column, Integer, ForeignKey, DateTime, Float, String
+from config import Base
 
-from config.db import meta
 
-user = Table('invoice', meta,
-             Column('id', Integer, primary_key=True, autoincrement=True),
-             Column('user', Integer, ForeignKey('user.id'),nullable=False),
-             Column('timestamp',DateTime, nullable=False),
-             Column('total',Float,nullable=False),
-             Column('orders',Float,nullable=False),
-             Column('payment_status',String,nullable=False),
-             Column('order_status',String,nullable=False)
-             )
+class Invoice(Base):
+    __tablename__ = "invoices"
+    id = Column(Integer,primary_key=True,index=True,autoincrement=True)
+    user_id = Column(Integer,ForeignKey("users.id"),index=True)
+    timestamp = Column(DateTime,nullable=False)
+    total = Column(Float,nullable=False)
+    status = Column(String,ForeignKey("orders.id"),nullable=False)
