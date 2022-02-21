@@ -70,19 +70,21 @@
                       <th>Price</th>
                       <th>Total</th>
                       <th>Action</th>
+                  {% if orders %}
               {% for order in orders %}
                   <tr>
-                      <td>{{order.name}}</td><td>{{order.quantity}}</td><td>{{order.price}}</td><td>{{order.total}}</td><td><a href=/delete/orders/{{order.id}}>Remove</a></td>
+                      <td>{{order.item_name}}</td><td>{{order.quantity}}</td><td>{{order.item_price}}</td><td>{{order.total}}</td><td><a href=/delete/orders/{{order.id}}>Remove</a></td>
                   </tr>
               {% endfor %}
                   <tr>
                       <td></td><td></td><td></td>
                           <td>
                               <form method='POST' action = "/invoice">
-                                  <input type="submit" value="Order Now !" class="btn btn-primary"></input>
+                                  <input type="submit" value="Order Now !" class="btn btn-primary"/>
                               </form>
                           </td>
                   </tr>
+                  {% endif %}
               </table>
                 </div>
                 <div class="modal-footer">
@@ -95,8 +97,6 @@
     </div>
       
     </body>
-
-</html>
 
 
 

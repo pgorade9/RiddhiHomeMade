@@ -19,7 +19,7 @@
                         <th scope="col">Make Payment</th>
                     </tr>
                     {% for invoice in invoices %}
-                    {% if invoice.payment_status=='unpaid' %}
+                    {% if invoice.o_status=='unpaid' %}
                     <tr>
                         <td scope="rows">{{invoice.id}}</td>
                         <td>{{invoice.timestamp.strftime('%a %d %b %Y')}}</td>
@@ -28,11 +28,11 @@
                         <td> {% set pay_amt = invoice.total*100 %}
             
                                 <form action="/pay/{{invoice.id}}/{{invoice.total}}" method="POST">
-                                    <script
+                                    <script>
                                     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                                     data-key="{{pub_key}}"
                                     data-amount="{{pay_amt}}"
-                                    data-name="{{current_user.username}}"
+                                    data-name="{{current_user.name}}"
                                     data-description="Widget"
                                     data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
                                     data-locale="auto">
@@ -93,4 +93,5 @@
 
         </div>
     </div>
+</main>
 {% endblock %}
