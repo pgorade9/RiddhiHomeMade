@@ -2,6 +2,5 @@ from enum import Enum
 
 
 class Status(Enum):
-    UNPAID = 1
-    PAID = 2
-    DELIVERED = 3
+    IN_CART=1
+    BILLED=2

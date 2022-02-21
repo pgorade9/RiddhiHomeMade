@@ -5,10 +5,10 @@ from sqlalchemy.orm import Session
 from config.db import SessionLocal
 from models import Message
 from routes.home import templates
-from utils import crud_user, crud_item, crud_order
+from utils import crud_user, crud_item, crud_order, crud_invoice
 
 order_routes = APIRouter()
-
+TEMP_INVOICE_ID = 9999
 
 # Dependency
 def get_db():
@@ -30,11 +30,13 @@ async def add_order(request: Request, item_id: int, db: Session = Depends(get_db
     products = crud_item.get_items(db)
     token = request.cookies.get("access_token")
     current_user = crud_user.get_current_user(token=token, db=db)
-    new_order = crud_order.create_order(db=db, item_id=item_id, quantity=quantity, user=current_user)
+
+    new_order = crud_order.create_order(db=db, item_id=item_id, quantity=quantity,
+                                        user=current_user, invoice_id=TEMP_INVOICE_ID)
     print("I passed create order step")
-    orders = crud_order.get_orders(db, current_user)
+    orders = crud_order.get_orders_for_current_user(db, current_user)
     if new_order:
-        print("I should not be seen")
+        print("I am in new order")
         crud_item.update_stock(order_id=new_order.id, quantity=quantity, db=db)
         messages = [Message(message=f"You Added Product to Cart for \"{new_order.item_name}\" ", flag="success")]
         return templates.TemplateResponse("index.html",
@@ -56,7 +58,7 @@ def delete_order(request: Request, order_id: int, db: Session = Depends(get_db))
     products = crud_item.get_items(db)
     token = request.cookies.get("access_token")
     current_user = crud_user.get_current_user(token=token, db=db)
-    orders = crud_order.get_orders(db, current_user)
+    orders = crud_order.get_orders_for_current_user(db, current_user)
     return templates.TemplateResponse("index.html",
                                       {"request": request, "products": products, "orders": orders,
                                        "current_user": current_user, "messages": messages})

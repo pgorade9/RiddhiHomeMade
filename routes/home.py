@@ -41,7 +41,7 @@ def home(request: Request, db: Session = Depends(get_db)):
         token = request.cookies.get("access_token")
         current_user = crud_user.get_current_user(db=db, token=token)
         print("current_user = ", current_user)
-        orders = crud_order.get_orders(db, current_user)
+        orders = crud_order.get_orders_for_current_user(db, current_user)
         return templates.TemplateResponse("index.html",
                                           {"request": request, "products": products, "orders": orders,
                                            "current_user": current_user})
