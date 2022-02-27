@@ -10,7 +10,7 @@ class User(Base):
     name = Column(String, index=True)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String)
-    image_url = Column(String)
+    # image_url = Column(String)
 
     def __repr__(self):
         return f"<User(name={self.id},email={self.email})>"

@@ -7,5 +7,4 @@ class Order(BaseModel):
     item_name: str
     quantity: int
     item_price: float
-    total: float
     user_id = int

@@ -1,7 +1,7 @@
 import sqlalchemy
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
-from wtforms import Form, StringField, PasswordField, SubmitField, BooleanField
+from wtforms import Form, StringField, PasswordField, SubmitField, BooleanField, FileField
 from wtforms.validators import DataRequired, ValidationError, Length, EqualTo
 
 # from config import engine, user
@@ -20,6 +20,7 @@ class RegistrationForm(Form):
     email = StringField('Email', validators=[DataRequired(), Length(min=2, max=100)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=2, max=20)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    # image = FileField('Picture')
     submit = SubmitField('Sign Up')
 
     def validate_email(self, db: Session, email):

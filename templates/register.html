@@ -1,8 +1,16 @@
 {% extends "base.html" %}
 
 {% block body%}
+
    <div class='content-section'>
-       <form method='POST' action = ''>
+       {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{message.flag}}" role="alert">
+                       {{message.message}}
+                    </div>
+                {% endfor %}
+       {% endif %}
+       <form method='POST' action = '/register'>
            <fieldset class='form-group'>
                 <legend class='border-bottom mb-4'>Join Today</legend>
                 <div class='form-group'>
@@ -67,6 +75,7 @@
                         {{ form.confirm_password(class='form-control form-control-lg') }}
                     {% endif %}
                 </div>
+
            </fieldset>
            <div class='form-group'>
                 {{ form.submit(class='btn btn-outline-info') }}

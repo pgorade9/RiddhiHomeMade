@@ -17,18 +17,19 @@
                         <th scope="col">Time</th>
                         <th scope="col">Total Amount (Rs.)</th>
                         <th scope="col">Make Payment</th>
+                        <th scope="col">View Order</th>
                     </tr>
                     {% for invoice in invoices %}
-                    {% if invoice.o_status=='unpaid' %}
+                    {% if invoice.payment_status=='UNPAID' %}
                     <tr>
                         <td scope="rows">{{invoice.id}}</td>
                         <td>{{invoice.timestamp.strftime('%a %d %b %Y')}}</td>
-                        <td>{{invoice.timestamp.strftime('%H %M %S')}}</td>
+                        <td>{{invoice.timestamp.strftime('%H : %M : %S')}}</td>
                         <td>{{invoice.total}}</td>
                         <td> {% set pay_amt = invoice.total*100 %}
             
                                 <form action="/pay/{{invoice.id}}/{{invoice.total}}" method="POST">
-                                    <script>
+                                    <script
                                     src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                                     data-key="{{pub_key}}"
                                     data-amount="{{pay_amt}}"
@@ -38,6 +39,25 @@
                                     data-locale="auto">
                                     </script>
                                 </form>
+                        </td>
+                        <td>
+                           <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#{{invoice.id}}">View</button>
+                           <div id="{{invoice.id}}" class="collapse">
+                             <table border="solid">
+                                      <tr><th>Item Name</th><th>Price</th><th>Quantity</th><th>Total</th></tr>
+                                      {% for order in orders %}
+                                        {% if order.invoice_id==invoice.id %}
+                                          <tr><td>{{order.item_name}}</td>
+                                          <td>{{order.item_price}}</td>
+                                          <td>{{order.quantity}}</td>
+                                          <td>{{order.item_price*order.quantity}}</td>
+                                        {% else %}
+<!--                                          <td>{{order.invoice_id}}</td><td>{{invoice.id}}</td>-->
+                                        {% endif %}
+                                          </tr>
+                                      {% endfor %}
+                             </table>
+                           </div>
                         </td>
                         </tr>     
                     {% endif %}
@@ -51,46 +71,83 @@
                         <th scope="col">Date</th>
                         <th scope="col">Time</th>
                         <th scope="col">Total Amount (Rs.)</th>
-                        <th scope="col">Order Status</th>
+                        <th scope="col">Payment Status</th>
+                        <th scope="col">View Order</th>
                     </tr>
                     {% for invoice in invoices %}
-                    {% if invoice.order_status=='received' %}
+                    {% if invoice.payment_status=='PAID' %}
                     <tr>
                         <td scope="row">{{invoice.id}}</td>
                         <td>{{invoice.timestamp.strftime('%a %d %b %Y')}}</td>
                         <td>{{invoice.timestamp.strftime('%H : %M : %S')}}</td>
                         <td>{{invoice.total}}</td>
-                        <td>{{invoice.order_status}}</td>
+                        <td>{{invoice.payment_status}}</td>
+                        <td>
+                           <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#{{invoice.id}}_paid">View</button>
+                           <div id="{{invoice.id}}_paid" class="collapse">
+                             <table border="solid">
+                                      <tr><th>Item Name</th><th>Price</th><th>Quantity</th><th>Total</th></tr>
+                                      {% for order in orders %}
+                                        {% if order.invoice_id==invoice.id %}
+                                          <tr><td>{{order.item_name}}</td>
+                                          <td>{{order.item_price}}</td>
+                                          <td>{{order.quantity}}</td>
+                                          <td>{{order.item_price*order.quantity}}</td>
+                                        {% else %}
+<!--                                          <td>{{order.invoice_id}}</td><td>{{invoice.id}}</td>-->
+                                        {% endif %}
+                                          </tr>
+                                      {% endfor %}
+                             </table>
+                           </div>
+                        </td>
                     </tr>     
                     {% endif %}
                    {% endfor %}
             </table>
             <hr>
             <h4>Past Orders</h4>
-                <table class='table table-striped table-dark'>
+            <table class='table table-striped table-dark'>
                     <tr>
                         <th scope="col">Invoice Number</th>
                         <th scope="col">Date</th>
                         <th scope="col">Time</th>
                         <th scope="col">Total Amount (Rs.)</th>
-                        <th scope="col">Order Status</th>
+                        <th scope="col">Payment Status</th>
+                        <th scope="col">View Order</th>
                     </tr>
                     {% for invoice in invoices %}
-                    {% if invoice.order_status=='delivered' %}
+                    {% if invoice.payment_status=='DELIVERED' %}
                     
                     <tr>
                         <td>{{invoice.id}}</td>
                         <td>{{invoice.timestamp.strftime('%a %d %b %Y')}}</td>
-                        <td>{{invoice.timestamp.strftime('%H %M %S')}}</td>
+                        <td>{{invoice.timestamp.strftime('%H : %M : %S')}}</td>
                         <td>{{invoice.total}}</td>
-                        <td>{{invoice.order_status}}</td>
+                        <td>{{invoice.payment_status}}</td>
+                        <td>
+                           <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#{{invoice.id}}_delivered">View</button>
+                           <div id="{{invoice.id}}_delivered" class="collapse">
+                             <table border="solid">
+                                      <tr><th>Item Name</th><th>Price</th><th>Quantity</th><th>Total</th></tr>
+                                      {% for order in orders %}
+                                        {% if order.invoice_id==invoice.id %}
+                                          <tr><td>{{order.item_name}}</td>
+                                          <td>{{order.item_price}}</td>
+                                          <td>{{order.quantity}}</td>
+                                          <td>{{order.item_price*order.quantity}}</td>
+                                        {% else %}
+<!--                                          <td>{{order.invoice_id}}</td><td>{{invoice.id}}</td>-->
+                                        {% endif %}
+                                          </tr>
+                                      {% endfor %}
+                             </table>
+                           </div>
+                        </td>
                     </tr>     
                     {% endif %}
                    {% endfor %}
                 </table>
-
-            
-
         </div>
     </div>
 </main>

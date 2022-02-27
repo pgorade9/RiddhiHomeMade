@@ -8,7 +8,6 @@ class UserBase(BaseModel):
     id: int
     name: str
     email: str
-    image_url: Optional[str]
 
 
 class UserCreate(UserBase):

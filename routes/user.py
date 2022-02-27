@@ -43,7 +43,7 @@ def add_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     return crud_user.create_user(db=db, user=user)
 
 
-@user_routes.delete("/user/{user_id}")
+@user_routes.delete("/delete/user/{user_id}")
 def delete_user(user_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     db_user = crud_user.get_user_by_id(db=db, user_id=user_id)
     if not db_user:

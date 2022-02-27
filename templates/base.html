@@ -24,17 +24,18 @@
                       <a style="color:white;" href= "{{ url_for('home') }}">Home</a> |
                       {% if current_user %}
                         Welcome {{current_user.name}} |
-                      </div>
-                      <div class ="linksright">
+                        {% else %}
+                        Welcome Guest |
+                        {% endif %}
+                    </div>
+                    <div class ="linksright">
                         <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">My Cart<i class="fas fa-cart-arrow-down links"></i></button>|
+                      {% if current_user %}
                         <a style="color:white;" href= "{{ url_for('invoice') }}">Your Orders</a> |
                         <a style="color:white;" href= "{{ url_for('logout') }}">LogOut</a>
-
                       {% else %}
-                        Welcome Guest |
                         <a style="color:white;" href= "{{ url_for('login') }}">Login</a> |
                         <a style="color:white;" href= "{{ url_for('register') }}">Register</a> |
-
                       {% endif %}
                     </div>
             </div>
@@ -68,12 +69,11 @@
                       <th>Product Name</th>
                       <th>Quantity</th>
                       <th>Price</th>
-                      <th>Total</th>
                       <th>Action</th>
                   {% if orders %}
               {% for order in orders %}
                   <tr>
-                      <td>{{order.item_name}}</td><td>{{order.quantity}}</td><td>{{order.item_price}}</td><td>{{order.total}}</td><td><a href=/delete/orders/{{order.id}}>Remove</a></td>
+                      <td>{{order.item_name}}</td><td>{{order.quantity}}</td><td>{{order.item_price}}</td><td><a href=/remove/orders/{{order.id}}>Remove</a></td>
                   </tr>
               {% endfor %}
                   <tr>

@@ -11,7 +11,6 @@ class Order(Base):
     item_name = Column(String, index=True)
     item_price = Column(Float, index=True)
     quantity = Column(Integer, nullable=False, index=True)
-    total = Column(Float)
     user_id = Column(Integer, ForeignKey("users.id"), index=True, nullable=False)
     status = Column(String, index=True, nullable=False)
     invoice_id = Column(Integer, index=True)
