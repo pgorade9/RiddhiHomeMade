@@ -27,7 +27,6 @@ class CRUD:
     def update_item_quantity(self, db: Session, item_id: int, quantity: int):
         order = db.query(models.Order).filter(models.Order.item_id == item_id).first()
         update_data = {"quantity": quantity + order.quantity}
-        print("updating item found.....", update_data["quantity"])
         result = db.query(models.Order).filter(models.Order.item_id == item_id).update(update_data,
                                                                                        synchronize_session='evaluate')
         if result:

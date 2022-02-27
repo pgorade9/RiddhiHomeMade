@@ -51,7 +51,13 @@ class CRUD:
         update_data = {"payment_status":Payment_Status.DELIVERED.name}
         db.query(models.Invoice).filter(models.Invoice.id==invoice_id).update(update_data,synchronize_session="evaluate")
         db.commit()
-        return {"Invoice Updated Delivered"}
+        return {"Invoice Updated as Delivered"}
+
+    def admin_update_payment_invoice(self, db: Session, invoice_id:int):
+        update_data = {"payment_status":Payment_Status.PAID.name}
+        db.query(models.Invoice).filter(models.Invoice.id==invoice_id).update(update_data,synchronize_session="evaluate")
+        db.commit()
+        return {"Invoice Updated as PAID"}
 
     def update_payment_invoice(self, db: Session, current_user: schemas.User):
         update_data = {"payment_status": Payment_Status.PAID.name}

@@ -30,8 +30,8 @@ def get_user(user_id: int, db: Session = Depends(get_db)):
     return crud_user.get_user_by_id(user_id=user_id, db=db)
 
 
-@user_routes.get("/user")
-def get_users(db: Session = Depends(get_db)):
+@user_routes.get("/users")
+def get_users(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)):
     return crud_user.get_all_users(db=db)
 
 

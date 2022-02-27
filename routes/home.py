@@ -5,7 +5,7 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from starlette import status
-
+import logging
 import schemas
 from config.db import SessionLocal
 from models import Message
@@ -50,8 +50,8 @@ def home(request: Request, messages: List[Message] = None, orders: List[schemas.
     if request.cookies.get("access_token"):
         token = request.cookies.get("access_token")
         current_user = crud_user.get_current_user(db=db, token=token)
-        print("current_user = ", current_user)
-        # orders = crud_order.get_orders_incart_for_current_user(db, current_user)
+        logging.info("Current User : " + current_user.name)
+        orders = crud_order.get_orders_incart_for_current_user(db, current_user)
         return templates.TemplateResponse("index.html",
                                           {"request": request, "products": products, "orders": orders,
                                            "current_user": current_user, "messages": messages})
@@ -71,9 +71,6 @@ async def login_form_model(email: str = Form(...), password: str = Form(...)):
 
 @home_routes.post("/login")
 async def login(request: Request, form: login_form_model = Depends(), db=Depends(get_db)):
-    print("form data= ", form)
-    print("email = ", form['email'])
-    print("password = ", form['password'])
     form = await request.form()
     email = form['email']
     password = form['password']
@@ -93,22 +90,15 @@ async def logout(request: Request):
 @home_routes.get("/register")
 async def register(request: Request):
     form = RegistrationForm()
-
-    # if request.method == 'POST':
-    #     if form.validate_email(form.email.data):
-    #         print(f'Your Account has been created ! You are now enabled to log in!', 'success')
-
     return templates.TemplateResponse("register.html", {"request": request, "form": form})
 
 
 @home_routes.post("/register")
 async def register(request: Request, db: Session = Depends(get_db)):
     form = await request.form()
-    print("form type = ", type(form))
     try:
         current_user = crud_user.register_user(db=db, form=form)
     except Exception as ex:
-        print("Dont know why but i am here === ", ex)
         messages = [
             Message(message=f"Email already taken = \"{form.get('email')}\". Please try another  ", flag="danger")]
         form = RegistrationForm()

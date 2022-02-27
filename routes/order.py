@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 from fastapi import APIRouter, Depends, Form, Request, status
@@ -15,7 +16,6 @@ TEMP_INVOICE_ID = 9999
 
 # Dependency
 def get_db():
-    print("SessionLocal : ", SessionLocal)
     db = SessionLocal()
     try:
         yield db
@@ -25,14 +25,12 @@ def get_db():
 
 @order_routes.post("/orders/{item_id}")
 async def add_order(request: Request, item_id: int, db: Session = Depends(get_db)):
-    print("Hey I am listening --- ")
+    logging.info("Adding Order")
     item = crud_item.get_item_by_id(item_id=item_id, db=db)
     form = await request.form()
     quantity = float(form.get("quantity"))
-    print("quantity = ", quantity)
     products = crud_item.get_items(db)
     token = request.cookies.get("access_token")
-    print("token = ", token)
     if token == "":
         print("I can continue creating session cookies here")
         response = RedirectResponse("/home", status_code=status.HTTP_302_FOUND)
@@ -43,10 +41,11 @@ async def add_order(request: Request, item_id: int, db: Session = Depends(get_db
 
     existing_order = crud_order.get_order_incart_by_item_id(db=db, item_id=item_id)
     if existing_order:
-        print("exiting item found.....")
+        logging.info("Found Item in Cart. Updating Quantity")
         crud_order.update_item_quantity(db=db,item_id=item_id,quantity=quantity)
 
     else:
+        logging.info("Creating new Order with status In-Cart")
         new_order = crud_order.create_order(db=db, item_id=item_id, quantity=quantity,
                                         user=current_user, invoice_id=TEMP_INVOICE_ID)
         if new_order:

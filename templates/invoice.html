@@ -26,7 +26,13 @@
                         <td>{{invoice.timestamp.strftime('%a %d %b %Y')}}</td>
                         <td>{{invoice.timestamp.strftime('%H : %M : %S')}}</td>
                         <td>{{invoice.total}}</td>
-                        <td> {% set pay_amt = invoice.total*100 %}
+                        <td>
+                           <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#{{invoice.id}}_qr_code">Payment Options</button>
+                           <div id="{{invoice.id}}_qr_code" class="collapse">
+
+                             <table style="border: 1px solid">
+                                 <tr style="border: 1px solid">
+                                     <td> {% set pay_amt = invoice.total*100 %}
             
                                 <form action="/pay/{{invoice.id}}/{{invoice.total}}" method="POST">
                                     <script
@@ -39,6 +45,20 @@
                                     data-locale="auto">
                                     </script>
                                 </form>
+                        </td>
+                                 </tr>
+                                 <tr>
+                                     <td><button type="button" class="btn btn-info" data-toggle="collapse" data-target="#{{invoice.id}}_gpay_instructions">GPay</button>
+                                        <div id="{{invoice.id}}_gpay_instructions" class="collapse">
+                                            <table><tr><td>Please mention invoice id in Payment Note</td></tr></table>
+                                        </div>
+                                     </td>
+                                 </tr>
+                                 <tr>
+                                     <td><img width=180px height=180px src="{{ url_for('static', path='qr_code_images/QR_Code_Axis.jpg')}}"/></td>
+                                 </tr>
+                             </table>
+                           </div>
                         </td>
                         <td>
                            <button type="button" class="btn btn-info" data-toggle="collapse" data-target="#{{invoice.id}}">View</button>
