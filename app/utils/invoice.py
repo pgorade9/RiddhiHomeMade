@@ -2,9 +2,9 @@ from datetime import datetime, timezone
 
 from sqlalchemy import DateTime
 from sqlalchemy.orm import Session
-import models
-import schemas
-from models import Status, Payment_Status
+from app import models
+from app import schemas
+from app.models import Status, Payment_Status
 
 
 class CRUD:

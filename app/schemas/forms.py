@@ -5,7 +5,7 @@ from wtforms import Form, StringField, PasswordField, SubmitField, BooleanField,
 from wtforms.validators import DataRequired, ValidationError, Length, EqualTo
 
 # from config import engine, user
-import models
+from app import models
 
 
 class LoginForm(Form):

@@ -6,16 +6,16 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from starlette import status
 import logging
-import schemas
-from config.db import SessionLocal
-from models import Message
-from schemas import LoginForm
-from schemas.forms import RegistrationForm
-from utils import crud_user, crud_item
-from utils.order import crud_order
+from app import schemas
+from app.config import SessionLocal
+from app.models import Message
+from app.schemas import LoginForm
+from app.schemas.forms import RegistrationForm
+from app.utils import crud_user, crud_item
+from app.utils.order import crud_order
 
 home_routes = APIRouter()
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="app/templates")
 
 
 # Dependency

@@ -4,10 +4,10 @@ from fastapi import APIRouter, Depends
 
 from sqlalchemy.orm import Session
 
-import models
-import schemas
-from config.db import SessionLocal
-from utils import crud_item
+from app import models
+from app import schemas
+from app.config import SessionLocal
+from app.utils import crud_item
 
 item_routes = APIRouter()
 

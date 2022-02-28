@@ -4,10 +4,10 @@ from sqlalchemy.orm import Session
 from starlette import status
 from starlette.datastructures import FormData
 
-import models
-import schemas
-from config import settings
-from utils import hashing
+from app import models
+from app import schemas
+from app.config import settings
+from app.utils import hashing
 
 
 class CRUD:

@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 
-import models
-import schemas
-from models import Status
+from app import models
+from app import schemas
+from app.models import Status
 
 
 class CRUD:

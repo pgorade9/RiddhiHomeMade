@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
-import models
-import schemas
+from app import models
+from app import schemas
 
 
 class CRUD:

@@ -5,12 +5,12 @@ from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 from starlette import status
 
-import schemas
-from config.db import SessionLocal
-from routes.home import templates
-from utils import crud_invoice, crud_user, crud_order
+from app import schemas
+from app.config import SessionLocal
+from app.routes.home import templates
+from app.utils import crud_invoice, crud_user, crud_order
 import stripe
-from config import settings
+from app.config import settings
 
 invoice_routes = APIRouter()
 

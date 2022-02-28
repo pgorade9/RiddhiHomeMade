@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Float
 from sqlalchemy.orm import relationship
 
-from config import Base
+from app.config import Base
 
 
 class Order(Base):
